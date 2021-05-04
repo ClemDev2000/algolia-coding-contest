@@ -8,7 +8,7 @@ const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
 
 export default function Map() {
   return (
-    <div className="min-h-screen col-span-2">
+    <div className="col-span-2 hidden md:block">
       <GoogleMapsLoader apiKey={googleApiKey}>
         {(google) => (
           <GeoSearch

@@ -28,9 +28,11 @@ function MyApp({ Component, pageProps }) {
             crossOrigin="anonymous"
           />
         </Head>
-        <div className="min-h-screen">
+        <div className="h-full">
           <Navbar />
-          <Component {...pageProps} />
+          <div className="pt-20 h-full">
+            <Component {...pageProps} />
+          </div>
         </div>
       </UserContext.Provider>
     </RefreshContext.Provider>

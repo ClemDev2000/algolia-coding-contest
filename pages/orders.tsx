@@ -60,7 +60,7 @@ export default function Orders() {
 
   return (
     <AuthCheck>
-      <div className="min-h-screen max-w-lg mx-auto mt-16">
+      <div className="max-w-lg mx-auto mt-16">
         <Head>
           <title>Localz - Orders</title>
           <meta name="description" content="Sell Next Your Home" />

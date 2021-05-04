@@ -10,6 +10,7 @@ import CustomSearchBox from '../components/SearchBox';
 import CustomNumericMenu from '../components/NumericMenu';
 import CustomRefinementList from '../components/RefinementList';
 import CustomClearRefinements from '../components/ClearRefinements';
+import CustomHierarchicalMenu from '../components/HierarchicalMenu';
 import Map from '../components/Map';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 
@@ -20,7 +21,7 @@ const searchClient = algoliasearch(
 
 export default function Home() {
   return (
-    <div className="min-h-screen">
+    <div className="h-full">
       <Head>
         <title>Localz - Sell Your Products</title>
         <meta
@@ -41,7 +42,7 @@ function Content() {
       searchClient={searchClient}
       indexName={process.env.NEXT_PUBLIC_INDEX_PRODUCTS}
     >
-      <main className="grid grid-cols-5">
+      <main className="grid grid-cols-5 h-full">
         <Products />
         <Map />
       </main>
@@ -70,6 +71,15 @@ function RefinementList({ type, attribute, text }) {
       show={type === text}
       attribute={attribute}
       searchable
+    />
+  );
+}
+
+function HierarchicalMenu({ type, text }) {
+  return (
+    <CustomHierarchicalMenu
+      show={type === text}
+      attributes={['categories.lvl0']}
     />
   );
 }
@@ -106,20 +116,22 @@ function Products() {
         clickAnalytics
         page={0}
       />
-      <div className="w-full min-h-screen col-span-3 px-5">
+      <div className="w-full h-full col-span-5 md:col-span-3 px-5 overflow-y-scroll">
         <CustomSearchBox
           resetSearch={resetSearch}
           setResetSearch={setResetSearch}
         />
-        <div className="flex space-x-2 mb-3">
+        <div className="flex space-x-2 mb-3 overflow-x-scroll">
           <FilterSelector text="price" type={type} setType={setType} />
           <FilterSelector text="seller" type={type} setType={setType} />
           <FilterSelector text="city" type={type} setType={setType} />
+          <FilterSelector text="categories" type={type} setType={setType} />
           <CustomClearRefinements setType={setType} />
         </div>
         <NumericMenuFilter type={type} />
         <RefinementList text="seller" attribute="user.name" type={type} />
         <RefinementList text="city" attribute="user.city" type={type} />
+        <HierarchicalMenu text="categories" type={type} />
         <ConfigureIndexProducts>
           <CustomResults>
             <CustomHitsProducts />

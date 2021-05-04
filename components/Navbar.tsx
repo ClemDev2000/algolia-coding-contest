@@ -1,4 +1,4 @@
-import { Fragment, useContext, useState } from 'react';
+import { Fragment, useContext, useRef, useState } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import {
   MenuIcon,
@@ -21,6 +21,8 @@ function classNames(...classes) {
 
 export default function Navbar() {
   const { user, userdata } = useContext(UserContext);
+
+  const buttonRef = useRef<any>(null);
 
   const router = useRouter();
 
@@ -71,7 +73,7 @@ export default function Navbar() {
 
   return (
     <>
-      <Disclosure as="nav" className="shadow-md z-10 relative">
+      <Disclosure as="nav" className="shadow-md z-10 fixed w-full bg-white">
         {({ open }) => (
           <>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -188,7 +190,10 @@ export default function Navbar() {
                 </div>
                 <div className="-mr-2 flex md:hidden">
                   {/* Mobile menu button */}
-                  <Disclosure.Button className="bg-gray-200 inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:text-white hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-400 focus:ring-white">
+                  <Disclosure.Button
+                    ref={buttonRef}
+                    className="bg-gray-100 inline-flex items-center justify-center p-2 rounded-md text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-red-400 focus:ring-white"
+                  >
                     <span className="sr-only">Open main menu</span>
                     {open ? (
                       <XIcon className="block h-6 w-6" aria-hidden="true" />
@@ -200,10 +205,10 @@ export default function Navbar() {
               </div>
             </div>
 
-            <Disclosure.Panel className="md:hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                {navigation.map((item, itemIdx) =>
-                  itemIdx === 0 ? (
+            <Disclosure.Panel className="md:hidden bg-white">
+              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 z-10">
+                {navigation.map((item) =>
+                  router.pathname === item.path ? (
                     <Fragment key={item.name}>
                       <a
                         href={item.path}
@@ -228,7 +233,7 @@ export default function Navbar() {
                   </div>
                   {user ? (
                     <div className="ml-3">
-                      <div className="text-base font-medium leading-none text-red-400">
+                      <div className="text-base font-medium leading-none text-gray-600">
                         {user.displayName}
                       </div>
                       <div className="text-sm font-normal leading-none text-gray-400">
@@ -238,6 +243,37 @@ export default function Navbar() {
                   ) : null}
                 </div>
                 <div className="mt-3 px-2 space-y-1">
+                  {user && (
+                    <a
+                      href="#"
+                      onClick={() => {
+                        sellProduct();
+                        buttonRef.current.click();
+                      }}
+                      className="block px-3 py-2 rounded-full text-base font-medium text-gray-400 hover:text-white hover:bg-red-300 cursor-pointer"
+                    >
+                      Sell a product
+                    </a>
+                  )}
+                  {user && userdata?.stripe.transfers && (
+                    <Link href="/reauth">
+                      <a className="block px-3 py-2 rounded-full text-base font-medium text-gray-400 hover:text-white hover:bg-red-300">
+                        Open bank account
+                      </a>
+                    </Link>
+                  )}
+                  {user && (
+                    <a
+                      href="#"
+                      onClick={() => {
+                        setOpenProfile(true);
+                        buttonRef.current.click();
+                      }}
+                      className="block px-3 py-2 rounded-full text-base font-medium text-gray-400 hover:text-white hover:bg-red-300 cursor-pointer"
+                    >
+                      Profile
+                    </a>
+                  )}
                   {profile.map((item) => (
                     <Link href={item.path} key={item.name}>
                       <a className="block px-3 py-2 rounded-full text-base font-medium text-gray-400 hover:text-white hover:bg-red-300">

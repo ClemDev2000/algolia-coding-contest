@@ -50,13 +50,13 @@ const HitProducts: React.FC<{
   };
 
   return (
-    <li className="flex bg-white py-3 h-44 overflow-hidden border-b border-gray-200">
+    <li className="flex bg-white py-3 h-40 md:h-44 overflow-hidden items-center border-b border-gray-200">
       <div
-        className="bg-cover bg-center border border-opacity-10 border-gray-400 rounded-xl w-36 flex-shrink-0 h-full"
+        className="bg-cover bg-center border border-opacity-10 border-gray-400 rounded-xl w-28 h-32 md:w-36 flex-shrink-0 md:h-full"
         style={{ backgroundImage: `url(${hit.photoUrl})` }}
       />
       <div className="flex flex-col h-full w-full px-3 py-3 overflow-x-scroll">
-        <span className="text-lg font-semibold truncate">
+        <span className="text-base md:text-lg font-semibold truncate">
           <Highlight attribute="name" hit={hit} />
         </span>
         <h2 className="text-xs sm:text-sm font-medium truncate text-gray-500">
@@ -65,11 +65,11 @@ const HitProducts: React.FC<{
           </span>
         </h2>
         <div className="border rounded-full w-1/5 my-2 bg-gray-300" />
-        <h3 className="text-base font-normal truncate text-gray-500">
+        <h3 className="text-sm md:text-base font-normal truncate text-gray-500">
           <Highlight attribute="description" hit={hit} />
         </h3>
         <div className="flex flex-wrap items-center justify-between mt-auto">
-          <h1 className="text-lg font-semibold text-gray-500">
+          <h1 className="sm:text-sm md:text-lg font-semibold text-gray-500">
             {formatAmountForDisplay(hit.amount, hit.currency)}
           </h1>
 
@@ -78,7 +78,7 @@ const HitProducts: React.FC<{
               onClick={() => setOpen(true)}
               className="inline-flex bg-red-500 rounded-full p-2 cursor-pointer justify-center border border-transparent text-sm font-medium focus:outline-none"
             >
-              <PencilIcon className="h-5 w-5 text-white" />
+              <PencilIcon className="h-4 w-4 md:h-5 md:w-5 text-white" />
             </button>
           ) : (
             <button
