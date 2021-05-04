@@ -20,6 +20,7 @@ if (!firebase.apps.length) {
 // Auth exports
 export const auth = firebase.auth();
 export const authCredential = firebase.auth.EmailAuthProvider.credential;
+export const authPersistence = firebase.auth.Auth.Persistence;
 
 // Storage exports
 export const storage = firebase.storage();

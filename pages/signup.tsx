@@ -1,25 +1,39 @@
 import { LockClosedIcon } from '@heroicons/react/solid';
-import { useCallback, useState } from 'react';
+import { useContext, useState } from 'react';
 import { auth } from '../lib/firebase';
 import Link from 'next/link';
 import { fetchPostJSON } from '../utils/api-helpers';
 import mapbox from '@mapbox/mapbox-sdk/services/geocoding';
+import { useRouter } from 'next/router';
+import { UserContext } from '../lib/context';
+import ErrorMessage from '../components/ErrorMessage';
+import Logo from '../components/Logo';
 
 const geocodingClient = mapbox({
   accessToken: process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN,
 });
 
-export default function Example() {
+export default function Signup() {
+  const router = useRouter();
+  const { user } = useContext(UserContext);
+
+  const [error, setError] = useState('');
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const [loading, setLoading] = useState(false);
 
   // Address states
   const [address, setAddress] = useState('');
   const [geoloc, setGeoloc] = useState<any>(null);
   const [values, setValues] = useState<any>(null);
+  const [city, setCity] = useState('');
 
-  const onChangeAddress = useCallback(async (val: string) => {
+  if (user) router.push('/');
+
+  const onChangeAddress = async (val: string) => {
     try {
       setAddress(val);
       setGeoloc(null);
@@ -40,47 +54,56 @@ export default function Example() {
         setValues(null);
       }
       if (!address) setValues(null);
-    } catch (err) {}
-  }, []);
+    } catch (err) {
+      console.warn(err.message);
+    }
+  };
 
-  const onAddressClick = async (address: string, center: number[]) => {
+  const onAddressClick = async (
+    address: string,
+    center: number[],
+    context: any[]
+  ) => {
     setAddress(address);
     setGeoloc({
       lng: center[0],
       lat: center[1],
     });
+    setCity(context.find((f) => f.id.startsWith('place.'))?.text);
     setValues(null);
   };
 
   const handleSignUp: React.FormEventHandler<HTMLFormElement> = async (e) => {
     try {
       e.preventDefault();
-      await fetchPostJSON('/api/users', {
+      setLoading(true);
+      const response = await fetchPostJSON('/api/users', {
         email,
         password,
         name,
         address,
         geoloc,
+        city,
       });
+      if (response.message) throw new Error(response.message);
       const userCredential = await auth.signInWithEmailAndPassword(
         email,
         password
       );
       await userCredential.user.sendEmailVerification();
+      router.push('/');
+      setLoading(false);
     } catch (err) {
-      console.error(err);
+      setLoading(false);
+      setError(err.message);
     }
   };
 
   return (
-    <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <img
-            className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-blue-600.svg"
-            alt="Workflow"
-          />
+          <Logo className="mx-auto h-12 w-auto" />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create your account
           </h2>
@@ -172,7 +195,13 @@ export default function Example() {
                   type="button"
                   key={value.place_name}
                   className="text-sm text-gray-500 font-normal hover:text-red-500 cursor-pointer mt-1 focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-red-500 rounded-md w-full text-left"
-                  onClick={() => onAddressClick(value.place_name, value.center)}
+                  onClick={() =>
+                    onAddressClick(
+                      value.place_name,
+                      value.center,
+                      value.context
+                    )
+                  }
                 >
                   {value.place_name}
                 </button>
@@ -180,22 +209,7 @@ export default function Example() {
             </div>
           )}
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember_me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-          </div>
+          <ErrorMessage message={error} />
 
           <div>
             <button
@@ -208,6 +222,28 @@ export default function Example() {
                   aria-hidden="true"
                 />
               </span>
+              {loading && (
+                <svg
+                  className="animate-spin -ml-1 mr-3 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              )}
               Sign Up
             </button>
           </div>

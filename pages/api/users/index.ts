@@ -40,7 +40,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const { email, password, name, address, geoloc } = req.body;
+      const { email, password, name, address, geoloc, city } = req.body;
       const uid = `u_${randomId(20)}`;
       await auth.createUser({
         uid,
@@ -86,6 +86,7 @@ export default async function handler(
         name,
         address,
         geoloc,
+        city,
         stripe: {
           customerId: customer.id,
           accountId: account.id,

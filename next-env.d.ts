@@ -10,6 +10,7 @@ interface IUser {
     accountId: string;
     transfers: boolean;
   };
+  city: string;
   address: string;
   geoloc: [number, number];
   created: number;
@@ -29,9 +30,13 @@ interface IProduct {
   user: {
     id: string;
     name: string;
+    city: string;
   };
   created: number;
-  _tags: string[];
+  categories: {
+    lvl0: string;
+    lvl1?: string;
+  };
   _geoloc: [number, number];
   __queryID?: string;
   __position?: string;

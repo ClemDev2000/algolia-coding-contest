@@ -157,15 +157,15 @@ export default function ProductModal({
                 </div>
                 <div>
                   <label
-                    htmlFor="description"
+                    htmlFor="email"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Email
                   </label>
                   <input
                     type="text"
-                    name="description"
-                    id="description"
+                    name="email"
+                    id="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -174,19 +174,20 @@ export default function ProductModal({
                 </div>
                 <div>
                   <label
-                    htmlFor="tags"
+                    htmlFor="address"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Address
                   </label>
                   <input
                     type="text"
-                    name="tags"
-                    id="tags"
+                    name="address"
+                    id="address"
+                    disabled
                     required
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md disabled:opacity-50"
                   />
                 </div>
 

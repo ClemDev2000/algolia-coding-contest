@@ -13,6 +13,6 @@ export default function Logout() {
       router.push('/');
       window.location.reload();
     } else router.push('/');
-  }, []);
+  }, [user]);
   return <Loader show />;
 }

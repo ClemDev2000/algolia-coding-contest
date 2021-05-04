@@ -77,7 +77,7 @@ export default async function handler(
   } else if (req.method === 'POST') {
     try {
       const { id } = req.query;
-      const { name, description, photoUrl, tags } = req.body;
+      const { name, description, photoUrl, categorylvl0 } = req.body;
 
       let user: IUser;
       try {
@@ -109,7 +109,11 @@ export default async function handler(
           ...(description && { description }),
           ...(name && { name }),
           ...(photoUrl && { photoUrl }),
-          ...(tags && { _tags: tags }),
+          ...(categorylvl0 && {
+            categories: {
+              lvl0: categorylvl0,
+            },
+          }),
         })
       );
 
@@ -120,6 +124,11 @@ export default async function handler(
             ...(description && { description }),
             ...(name && { name }),
             ...(photoUrl && { photoUrl }),
+            ...(categorylvl0 && {
+              categories: {
+                lvl0: categorylvl0,
+              },
+            }),
           })
       );
 

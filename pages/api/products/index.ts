@@ -37,7 +37,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const { name, description, amount, photoUrl, tags } = req.body;
+      const { name, description, amount, photoUrl, categorylvl0 } = req.body;
 
       let user: IUser;
       try {
@@ -84,8 +84,11 @@ export default async function handler(
         user: {
           name: user.name,
           id: user.id,
+          city: user.city,
         },
-        _tags: tags,
+        categories: {
+          lvl0: categorylvl0,
+        },
         _geoloc: user.geoloc,
       };
 

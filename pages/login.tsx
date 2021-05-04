@@ -1,32 +1,43 @@
 import { LockClosedIcon } from '@heroicons/react/solid';
-import { useState } from 'react';
-import { auth } from '../lib/firebase';
+import { useContext, useState } from 'react';
+import { auth, authPersistence } from '../lib/firebase';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { UserContext } from '../lib/context';
+import ErrorMessage from '../components/ErrorMessage';
+import Logo from '../components/Logo';
 
 export default function Example() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const [remember, setRemember] = useState(true);
+
+  const [error, setError] = useState('');
+
+  const { user } = useContext(UserContext);
+
   const router = useRouter();
+
+  if (user) router.push('/');
 
   const handleSignIn: React.FormEventHandler<HTMLFormElement> = async (e) => {
     try {
       e.preventDefault();
+      if (remember) await auth.setPersistence(authPersistence.LOCAL);
+      else await auth.setPersistence(authPersistence.SESSION);
       await auth.signInWithEmailAndPassword(email, password);
       router.push('/');
-    } catch (err) {}
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
-    <div className="flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <img
-            className="mx-auto h-12 w-auto"
-            src="https://tailwindui.com/img/logos/workflow-mark-blue-600.svg"
-            alt="Workflow"
-          />
+          <Logo className="mx-auto h-12 w-auto" />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
@@ -76,12 +87,16 @@ export default function Example() {
             </div>
           </div>
 
+          <ErrorMessage message={error} />
+
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <input
                 id="remember_me"
                 name="remember_me"
                 type="checkbox"
+                checked={remember}
+                onChange={() => setRemember(!remember)}
                 className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
               />
               <label

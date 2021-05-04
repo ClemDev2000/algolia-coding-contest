@@ -7,6 +7,7 @@ import { formatAmountForDisplay } from '../utils/stripe-helpers';
 import aa from 'search-insights';
 import { PencilIcon, ShoppingBagIcon } from '@heroicons/react/outline';
 import Product from './ProductModal';
+import Highlight from '../components/Highlight';
 
 const indexProducts = process.env.NEXT_PUBLIC_INDEX_PRODUCTS;
 
@@ -55,7 +56,9 @@ const HitProducts: React.FC<{
         style={{ backgroundImage: `url(${hit.photoUrl})` }}
       />
       <div className="flex flex-col h-full w-full px-3 py-3 overflow-x-scroll">
-        <span className="text-lg font-semibold truncate">{hit.name}</span>
+        <span className="text-lg font-semibold truncate">
+          <Highlight attribute="name" hit={hit} />
+        </span>
         <h2 className="text-xs sm:text-sm font-medium truncate text-gray-500">
           <span className="text-gray-400 font-normal">
             par <span className="text-gray-500">{hit.user.name}</span>
@@ -63,7 +66,7 @@ const HitProducts: React.FC<{
         </h2>
         <div className="border rounded-full w-1/5 my-2 bg-gray-300" />
         <h3 className="text-base font-normal truncate text-gray-500">
-          {hit.description}
+          <Highlight attribute="description" hit={hit} />
         </h3>
         <div className="flex flex-wrap items-center justify-between mt-auto">
           <h1 className="text-lg font-semibold text-gray-500">

@@ -19,7 +19,7 @@ const SearchBox: React.FC<any> = ({
   }, [resetSearch]);
 
   return (
-    <div className="flex items-center w-full mx-auto my-5 py-2 border shadow-sm rounded-full border-gray-200">
+    <div className="flex items-center w-full mx-auto mt-5 mb-3 py-2 border shadow-sm rounded-full border-gray-200">
       <form
         noValidate
         onSubmit={(ev) => ev.preventDefault()}
@@ -32,7 +32,7 @@ const SearchBox: React.FC<any> = ({
           value={currentRefinement}
           onChange={(event) => refine(event.currentTarget.value)}
           className="block w-full text-base md:text-lg bg-white border-0 focus:ring-0 p-1 font-normal text-gray-500 placeholder-gray-400"
-          placeholder="Search by name, description, seller"
+          placeholder="Search by name, description"
         />
         <div className="bg-red-500 rounded-full p-2 cursor-pointer">
           <SearchIcon className="h-5 w-5 text-white" />

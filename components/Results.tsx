@@ -12,7 +12,7 @@ const Results: React.FC<any> = ({ searchState, searchResults, children }) => {
   ) : (
     <div className="flex flex-col items-center justify-center h-36">
       <h1 className="mt-4 font-medium text-base text-gray-600">
-        No product in this area.
+        No product to display.
       </h1>
     </div>
   );

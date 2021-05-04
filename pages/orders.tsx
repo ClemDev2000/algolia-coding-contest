@@ -67,7 +67,7 @@ export default function Orders() {
         </Head>
 
         {!orders.length && (
-          <div className="flex justify-center text-lg font-semibold text-gray-800">
+          <div className="flex justify-center text-lg font-semibold text-gray-500">
             No orders to show
           </div>
         )}
