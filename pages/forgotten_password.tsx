@@ -9,9 +9,6 @@ import Logo from '../components/Logo';
 
 export default function Example() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const [remember, setRemember] = useState(true);
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -22,13 +19,13 @@ export default function Example() {
 
   if (user) router.push('/');
 
-  const handleSignIn: React.FormEventHandler<HTMLFormElement> = async (e) => {
+  const handleResetPassword: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
     try {
       e.preventDefault();
       setLoading(true);
-      if (remember) await auth.setPersistence(authPersistence.LOCAL);
-      else await auth.setPersistence(authPersistence.SESSION);
-      await auth.signInWithEmailAndPassword(email, password);
+      await auth.sendPasswordResetEmail(email);
       router.push('/');
       setLoading(false);
     } catch (err) {
@@ -43,18 +40,18 @@ export default function Example() {
         <div>
           <Logo className="mx-auto h-12 w-auto" />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+            Reset your password
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
-            <Link href="/signup">
+            <Link href="/login">
               <a className="font-medium text-red-600 hover:text-red-500">
-                create your account
+                sign in
               </a>
             </Link>
           </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSignIn}>
+        <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
           <input type="hidden" name="remember" defaultValue="true" />
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
@@ -67,58 +64,15 @@ export default function Example() {
                 type="email"
                 autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
+                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
                 placeholder="Email address"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
               />
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-red-500 focus:border-red-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
-                value={password}
-              />
-            </div>
           </div>
 
           <ErrorMessage message={error} />
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember_me"
-                name="remember_me"
-                type="checkbox"
-                checked={remember}
-                onChange={() => setRemember(!remember)}
-                className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
-              />
-              <label
-                htmlFor="remember_me"
-                className="ml-2 block text-sm text-gray-900"
-              >
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <Link href="/forgotten_password">
-                <a className="font-medium text-red-600 hover:text-red-500">
-                  Forgot your password?
-                </a>
-              </Link>
-            </div>
-          </div>
 
           <div>
             <button
@@ -153,7 +107,7 @@ export default function Example() {
                   ></path>
                 </svg>
               )}
-              Sign In
+              Reset my password
             </button>
           </div>
         </form>
