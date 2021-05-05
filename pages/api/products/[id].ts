@@ -1,5 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { authentication } from '../../../utils/api-helpers';
+
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   // https://github.com/stripe/stripe-node#configuration
@@ -13,7 +15,10 @@ const client = algoliasearch(
 );
 const indexProducts = client.initIndex(process.env.INDEX_PRODUCTS!);
 
+const bucketName: string = process.env.FIREBASE_BUCKET_NAME!;
+
 import * as admin from 'firebase-admin';
+import { getStoragePathFromUrl } from '../../../utils/api-helpers';
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -27,6 +32,7 @@ if (!admin.apps.length) {
 
 const firestore = admin.firestore();
 const auth = admin.auth();
+const storage = admin.storage();
 
 export default async function handler(
   req: NextApiRequest,
@@ -36,19 +42,13 @@ export default async function handler(
     try {
       const { id } = req.query;
 
-      let user: IUser;
-      try {
-        const { uid } = await auth.verifyIdToken(
-          req.headers.token as string,
-          true
-        );
-        user = (await firestore.doc(`users/${uid}`).get()).data() as IUser;
-      } catch (error) {
-        return res.status(401).json({ error: error.message });
-      }
+      const { user, error } = await authentication(req, auth, firestore);
+      if (error) return res.status(401).json({ error });
 
       const doc = await firestore.doc(`users/${user.id}/products/${id}`).get();
       const product = doc.data() as IProduct;
+
+      const storagePath = getStoragePathFromUrl(product.photoUrl);
 
       const promises = [];
 
@@ -64,6 +64,7 @@ export default async function handler(
       );
       promises.push(indexProducts.deleteObject(product.objectID));
       promises.push(firestore.doc(`users/${user.id}/products/${id}`).delete());
+      promises.push(storage.bucket(bucketName).file(storagePath).delete());
 
       await Promise.all(promises);
 
@@ -79,16 +80,8 @@ export default async function handler(
       const { id } = req.query;
       const { name, description, photoUrl, categorylvl0 } = req.body;
 
-      let user: IUser;
-      try {
-        const { uid } = await auth.verifyIdToken(
-          req.headers.token as string,
-          true
-        );
-        user = (await firestore.doc(`users/${uid}`).get()).data() as IUser;
-      } catch (error) {
-        return res.status(401).json({ error: error.message });
-      }
+      const { user, error } = await authentication(req, auth, firestore);
+      if (error) return res.status(401).json({ error });
 
       const doc = await firestore.doc(`users/${user.id}/products/${id}`).get();
       const product = doc.data() as IProduct;

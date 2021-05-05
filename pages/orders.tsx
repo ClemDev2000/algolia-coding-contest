@@ -94,7 +94,7 @@ function Column({
 
       {!loading && !objectsEnd && (
         <button
-          className="flex mx-auto mt-5 mb-20 text-base rounded-md text-gray-500 font-normal focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="flex mx-auto mt-5 mb-20 text-base rounded-md text-gray-500 font-normal focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
           onClick={() =>
             getMoreOrders('seller', objects, setObjects, setObjectsEnd)
           }
@@ -147,7 +147,7 @@ export default function Orders() {
       <div className="max-w-4xl mx-auto mt-16 pb-16 grid grid-cols-2">
         <Column
           title="My purchases (bought)"
-          emptyMessage="No purchases to show"
+          emptyMessage="No purchase to show"
           objects={purchases}
           objectsEnd={purchasesEnd}
           setObjects={setPurchases}
@@ -156,7 +156,7 @@ export default function Orders() {
 
         <Column
           title="My orders (sold)"
-          emptyMessage="No orders to show"
+          emptyMessage="No order to show"
           objects={orders}
           objectsEnd={ordersEnd}
           setObjects={setOrders}

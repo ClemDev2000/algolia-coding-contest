@@ -6,6 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2020-08-27',
 });
 import * as admin from 'firebase-admin';
+import { authentication } from '../../../utils/api-helpers';
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -26,18 +27,10 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const { email, address, name, geoloc } = req.body;
+      const { email, name } = req.body;
 
-      let user: IUser;
-      try {
-        const { uid } = await auth.verifyIdToken(
-          req.headers.token as string,
-          true
-        );
-        user = (await firestore.doc(`users/${uid}`).get()).data() as IUser;
-      } catch (error) {
-        return res.status(401).json({ error: error.message });
-      }
+      const { user, error } = await authentication(req, auth, firestore);
+      if (error) return res.status(401).json({ error });
 
       const promises = [];
 
@@ -60,7 +53,6 @@ export default async function handler(
         firestore.doc(`users/${user.id}`).update({
           ...(name && { name }),
           ...(email && { email }),
-          ...(address && geoloc && { address, geoloc }),
         })
       );
 

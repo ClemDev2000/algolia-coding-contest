@@ -6,7 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2020-08-27',
 });
 
-import { now } from '../../../utils/api-helpers';
+import { authentication, now } from '../../../utils/api-helpers';
 
 import algoliasearch from 'algoliasearch';
 const client = algoliasearch(
@@ -39,16 +39,8 @@ export default async function handler(
     try {
       const { name, description, amount, photoUrl, categorylvl0 } = req.body;
 
-      let user: IUser;
-      try {
-        const { uid } = await auth.verifyIdToken(
-          req.headers.token as string,
-          true
-        );
-        user = (await firestore.doc(`users/${uid}`).get()).data() as IUser;
-      } catch (error) {
-        return res.status(401).json({ error: error.message });
-      }
+      const { user, error } = await authentication(req, auth, firestore);
+      if (error) return res.status(401).json({ error });
 
       const product = await stripe.products.create({
         name,

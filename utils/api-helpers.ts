@@ -1,4 +1,5 @@
 import { randomBytes } from 'crypto';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export async function fetchGetJSON(url: string) {
   try {
@@ -61,4 +62,29 @@ export const randomId = (idLength: number, chars?: string) => {
 
 export const now = () => {
   return Math.floor(Date.now() / 1000);
+};
+
+export const getStoragePathFromUrl = (url?: string) => {
+  if (!url) return '';
+  let parts = url.split('%2F');
+  parts[0] = parts[0].split('/o/')[1];
+  parts[parts.length - 1] = parts[parts.length - 1].split('?alt=')[0];
+  return parts.join('/');
+};
+
+export const authentication = async (
+  req: NextApiRequest,
+  auth: any,
+  firestore: any
+) => {
+  let user: IUser | undefined;
+  let error: string | undefined;
+  try {
+    const { uid } = await auth.verifyIdToken(req.headers.token as string, true);
+    user = (await firestore.doc(`users/${uid}`).get()).data() as IUser;
+  } catch (err) {
+    error = err.message;
+  } finally {
+    return { user, error };
+  }
 };

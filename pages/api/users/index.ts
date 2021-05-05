@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { now, randomId } from '../../../utils/api-helpers';
+import { authentication, now, randomId } from '../../../utils/api-helpers';
 
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -12,6 +12,7 @@ import * as firebaseTools from 'firebase-tools';
 
 const FIREBASE_PROJECT_ID: string = process.env.FIREBASE_PROJECT_ID!;
 const FIREBASE_TOKEN: string = process.env.FIREBASE_TOKEN!;
+const bucketName: string = process.env.FIREBASE_BUCKET_NAME!;
 
 import algoliasearch from 'algoliasearch';
 const client = algoliasearch(
@@ -125,21 +126,25 @@ export default async function handler(
     }
   } else if (req.method === 'DELETE') {
     try {
-      let user: IUser;
-      try {
-        const { uid } = await auth.verifyIdToken(
-          req.headers.token as string,
-          true
-        );
-        user = (await firestore.doc(`users/${uid}`).get()).data() as IUser;
-      } catch (error) {
-        return res.status(401).json({ error: error.message });
-      }
+      const { user, error } = await authentication(req, auth, firestore);
+      if (error) return res.status(401).json({ error });
 
       // Check if the account has a zero balance before deleting the rest of the data.
       await stripe.accounts.del(user.stripe.accountId);
 
       const promises = [];
+
+      const productsRef = firestore.collection(`users/${user.id}/products`);
+      const snapshot = await productsRef.get();
+      snapshot.forEach((doc) => {
+        const product = doc.data() as IProduct;
+        promises.push(
+          stripe.products.update(product.stripe.productId, { active: false })
+        );
+        promises.push(
+          stripe.prices.update(product.stripe.priceId, { active: false })
+        );
+      });
 
       promises.push(stripe.customers.del(user.stripe.customerId));
       promises.push(
@@ -149,7 +154,7 @@ export default async function handler(
       );
       promises.push(auth.deleteUser(user.id));
       promises.push(
-        storage.bucket().deleteFiles({
+        storage.bucket(bucketName).deleteFiles({
           prefix: `users/${user.id}`,
         })
       );

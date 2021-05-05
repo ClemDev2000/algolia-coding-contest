@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { Fragment, useContext, useState } from 'react';
 import CustomResults from '../components/algolia/Results';
 import CustomHitsProducts from '../components/ProductsHits';
 import { ConfigureIndexProducts } from '../components/algolia/ConfigureAlgolia';
@@ -12,6 +12,7 @@ import CustomClearRefinements from '../components/algolia/ClearRefinements';
 import CustomHierarchicalMenu from '../components/algolia/HierarchicalMenu';
 import Map from '../components/Map';
 import { ChevronDownIcon } from '@heroicons/react/solid';
+import { Menu, Transition } from '@headlessui/react';
 
 const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_APP_ID,
@@ -110,17 +111,29 @@ function Products() {
   const [myProducts, setMyProducts] = useState(false);
   return (
     <>
+      {/* Algolia configurations */}
       <Configure
         userToken={user?.uid}
         clickAnalytics
+        enablePersonalization
+        analytics
         page={0}
-        filters={myProducts && user ? `user.id:${user.uid}` : undefined}
+        filters={
+          user
+            ? myProducts
+              ? `user.id:${user.uid}`
+              : `NOT user.id:${user.uid}`
+            : undefined
+        }
       />
       <div className="w-full h-full col-span-5 md:col-span-3 px-5 overflow-y-scroll">
+        {/* Main search box */}
         <CustomSearchBox
           resetSearch={resetSearch}
           setResetSearch={setResetSearch}
         />
+
+        {/* Filters */}
         <div className="flex space-x-2 mb-3 overflow-x-scroll">
           <FilterSelector text="price" type={type} setType={setType} />
           <FilterSelector text="seller" type={type} setType={setType} />
@@ -134,10 +147,14 @@ function Products() {
             />
           )}
         </div>
+
+        {/* Filters content */}
         <NumericMenuFilter type={type} />
         <RefinementList text="seller" attribute="user.name" type={type} />
         <RefinementList text="city" attribute="user.city" type={type} />
         <HierarchicalMenu text="categories" type={type} />
+
+        {/* Results */}
         <ConfigureIndexProducts>
           <CustomResults>
             <CustomHitsProducts />

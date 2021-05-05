@@ -4,7 +4,7 @@ import {
   Marker,
 } from 'react-instantsearch-dom-maps';
 
-const googleApiKey = process.env.NEXT_PUBLIC_GOOGLE_API_KEY;
+const googleApiKey: string = process.env.NEXT_PUBLIC_GOOGLE_API_KEY!;
 
 export default function Map() {
   return (

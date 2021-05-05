@@ -6,6 +6,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2020-08-27',
 });
 import * as admin from 'firebase-admin';
+import { authentication } from '../../../utils/api-helpers';
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -26,16 +27,8 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      let user: IUser;
-      try {
-        const { uid } = await auth.verifyIdToken(
-          req.headers.token as string,
-          true
-        );
-        user = (await firestore.doc(`users/${uid}`).get()).data() as IUser;
-      } catch (error) {
-        return res.status(401).json({ error: error.message });
-      }
+      const { user, error } = await authentication(req, auth, firestore);
+      if (error) return res.status(401).json({ error });
 
       if (!user.stripe.transfers) {
         const accountLink = await stripe.accountLinks.create({

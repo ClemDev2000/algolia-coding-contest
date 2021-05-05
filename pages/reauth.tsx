@@ -18,7 +18,7 @@ export default function Reauth() {
       );
       window.location.href = res.url;
     } catch (err) {
-      console.error(err.message);
+      console.warn(err.message);
     }
   };
 
