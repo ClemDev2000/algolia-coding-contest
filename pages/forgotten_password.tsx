@@ -15,6 +15,8 @@ export default function Example() {
 
   const router = useRouter();
 
+  const disabled = !email;
+
   if (user) router.push('/');
 
   const handleResetPassword: React.FormEventHandler<HTMLFormElement> = async (
@@ -57,7 +59,11 @@ export default function Example() {
 
       <ErrorMessage message={error} />
 
-      <FormButton loading={loading} text="Reset my password" />
+      <FormButton
+        loading={loading}
+        disabled={disabled}
+        text="Reset my password"
+      />
     </FormHead>
   );
 }

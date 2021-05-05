@@ -4,6 +4,7 @@ import { RefreshContext, UserContext } from '../lib/context';
 import { fetchDeleteJSON, fetchPostJSON } from '../utils/api-helpers';
 import { handleUploadPhotos } from '../utils/storage';
 import { Categories } from './Categories';
+import ErrorMessage from './ErrorMessage';
 import { Modal, ModalField, ModalFooter } from './Modals';
 
 function PhotoField({
@@ -56,6 +57,7 @@ export default function ProductModal({
   const { setRefresh } = useContext(RefreshContext);
 
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const [currentPhoto, setCurrentPhoto] = useState(product?.photoUrl ?? '');
   const [photo, setPhoto] = useState<any>(null);
@@ -120,6 +122,7 @@ export default function ProductModal({
       setOpen(false);
       reset();
     } catch (err) {
+      setError(err.message);
       console.warn(err.message);
     }
     setLoading(false);
@@ -153,6 +156,7 @@ export default function ProductModal({
       reset();
       setOpen(false);
     } catch (err) {
+      setError(err.message);
       console.warn(err.message);
     }
     setLoading(false);
@@ -173,6 +177,7 @@ export default function ProductModal({
       reset();
       setOpen(false);
     } catch (err) {
+      setError(err.message);
       console.warn(err.message);
     }
     setLoading(false);
@@ -254,6 +259,7 @@ export default function ProductModal({
         </div>
       </div>
       <Categories category={category} setCategory={setCategory} />
+      <ErrorMessage message={error} />
       <ModalFooter
         loading={loading}
         mainButtonText={product ? 'Update' : 'Create'}

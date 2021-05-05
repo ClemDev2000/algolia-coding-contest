@@ -19,6 +19,8 @@ export default function Example() {
 
   const router = useRouter();
 
+  const disabled = !(email && password);
+
   if (user) router.push('/');
 
   const handleSignIn: React.FormEventHandler<HTMLFormElement> = async (e) => {
@@ -99,7 +101,7 @@ export default function Example() {
         </div>
       </div>
 
-      <FormButton loading={loading} text="Sign In" />
+      <FormButton loading={loading} disabled={disabled} text="Sign In" />
     </FormHead>
   );
 }

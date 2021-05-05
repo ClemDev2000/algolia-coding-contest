@@ -33,6 +33,19 @@ export default function Signup() {
   const [region, setRegion] = useState('');
   const [postcode, setPostcode] = useState('');
 
+  const disabled = !(
+    address &&
+    geoloc &&
+    city &&
+    line1 &&
+    region &&
+    postcode &&
+    firstName &&
+    lastName &&
+    email &&
+    password
+  );
+
   if (user) router.push('/');
 
   const onChangeAddress = async (val: string) => {
@@ -208,7 +221,7 @@ export default function Signup() {
 
       <ErrorMessage message={error} />
 
-      <FormButton loading={loading} text="Sign Up" />
+      <FormButton loading={loading} disabled={disabled} text="Sign Up" />
     </FormHead>
   );
 }

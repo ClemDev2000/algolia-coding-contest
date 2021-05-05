@@ -44,6 +44,7 @@ ALGOLIA_SECRET_KEY="Algolia secret key"
 ALGOLIA_APP_ID="Algolia app ID"
 INDEX_PRODUCTS="Algolia index name"
 
+FIREBASE_BUCKET_NAME="Firebase bucket name"
 FIREBASE_TOKEN="Firebase CI token"
 FIREBASE_PROJECT_ID="Firebase project ID"
 FIREBASE_CLIENT_EMAIL="Firebase service account client email"
