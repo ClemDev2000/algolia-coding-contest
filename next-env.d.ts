@@ -49,6 +49,7 @@ interface IOrder {
     name: string;
     photoUrl: string;
   };
+  fees: number;
   created: number;
   amount: number;
   currency: string;

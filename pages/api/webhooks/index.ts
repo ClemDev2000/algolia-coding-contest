@@ -69,9 +69,17 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           const currency = session.currency;
 
           const price = session.line_items.data[0].price;
-          const product = await stripe.products.retrieve(
+          const productPromise = stripe.products.retrieve(
             price.product as string
           );
+          const paymentIntentPromise = stripe.paymentIntents.retrieve(
+            session.payment_intent as string
+          );
+
+          const [product, paymentIntent] = await Promise.all([
+            productPromise,
+            paymentIntentPromise,
+          ]);
 
           const shipping = session.shipping;
 
@@ -83,6 +91,7 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
               photoUrl: product.images[0],
             },
             created: now(),
+            fees: paymentIntent.application_fee_amount,
             amount,
             seller,
             buyer,
