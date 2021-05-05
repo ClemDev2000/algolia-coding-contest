@@ -13,7 +13,7 @@ export default function Map() {
         {(google) => (
           <GeoSearch
             google={google}
-            enableRefineOnMapMove={false}
+            enableRefineOnMapMove={true}
             initialZoom={8}
           >
             {({ hits }) => (

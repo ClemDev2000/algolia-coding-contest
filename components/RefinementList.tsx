@@ -10,7 +10,7 @@ const RefinementList = ({
 }) => (
   <ul className={show ? 'mt-4 space-y-3 mb-1' : 'hidden'}>
     <li>
-      <div className="flex items-center w-2/6 mb-2 mt-2 py-1 border shadow-sm rounded-full border-gray-200">
+      <div className="flex items-center w-1/2 md:w-2/6 mb-2 mt-2 py-1 border shadow-sm rounded-full border-gray-200">
         <form
           noValidate
           onSubmit={(ev) => ev.preventDefault()}

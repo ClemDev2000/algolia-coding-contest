@@ -6,5 +6,15 @@ import { UserContext } from '../lib/context';
 export default function AuthCheck(props) {
   const { user } = useContext(UserContext);
 
-  return user ? props.children : props.fallback || <Link href="/login">You must be signed in</Link>;
+  return user
+    ? props.children
+    : props.fallback || (
+        <div className="mt-10 w-full flex justify-center">
+          <Link href="/login">
+            <a className="font-semibold text-base text-gray-600">
+              You must be signed in to access this page
+            </a>
+          </Link>
+        </div>
+      );
 }

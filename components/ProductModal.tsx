@@ -34,7 +34,9 @@ export default function ProductModal({
   const [description, setDescription] = useState(product?.description ?? '');
   const [name, setName] = useState(product?.name ?? '');
   const [amount, setAmount] = useState(product?.amount ?? '');
-  const [category, setCategory] = useState(product?.categories.lvl0 ?? '');
+  const [category, setCategory] = useState(
+    product?.categories.lvl0 ?? 'Electronics'
+  );
 
   useEffect(() => {
     if (product && open === true) {
@@ -59,7 +61,7 @@ export default function ProductModal({
     setPhotoUrl('');
     setPhoto(null);
     setCurrentPhoto('');
-    setCategory('');
+    setCategory('Electronics');
   }
 
   const handleCreateProduct: React.FormEventHandler<HTMLFormElement> = async (
@@ -328,7 +330,7 @@ export default function ProductModal({
                   {product && (
                     <button
                       type="button"
-                      className="inline-flex ml-auto justify-center px-4 py-2 text-sm font-medium text-red-500 bg-white border border-transparent rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
+                      className="inline-flex ml-auto justify-center pl-4 py-2 text-sm font-medium text-red-500 bg-white border border-transparent rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
                       onClick={handleDeleteProduct}
                     >
                       Delete

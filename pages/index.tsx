@@ -19,22 +19,7 @@ const searchClient = algoliasearch(
   process.env.NEXT_PUBLIC_ALGOLIA_SEARCH_KEY
 );
 
-export default function Home() {
-  return (
-    <div className="h-full">
-      <Head>
-        <title>Localz - Sell Your Products</title>
-        <meta
-          name="description"
-          content="Localz is an online marketplace where you can sell your product by location"
-        />
-      </Head>
-      <Content />
-    </div>
-  );
-}
-
-function Content() {
+export default function Content() {
   const { refresh } = useContext(RefreshContext);
   return (
     <InstantSearch

@@ -1,34 +1,69 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Algolia Coding Contest 2021 (Second category)
 
-First, run the development server:
+This project was entirely created for Algolia Coding Contest 2021.
+
+The website is called [Localz](https://algolia-coding-contest.vercel.app/). It's a P2P marketplace where everyone can sell and buy products posted by others.
+
+A live demo is available [here](https://algolia-coding-contest.vercel.app/).
+
+Note that the [live demo](https://algolia-coding-contest.vercel.app/) uses **TEST API keys**, so feel free to experiment as you want.
+
+Note: _This project is configured to run **french businesses**. As a result, **Stripe connected accounts** will be created with `country: 'FR'` params and **Mapbox Geocoding API** will only show FR addresses. Moreover the main currency is **EUR**. For convenience and for the internationality of this competition, English is used as the main language._
+
+This project was made with:
+
+- [Next.js](https://nextjs.org/) and [React](https://reactjs.org/docs/getting-started.html)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Algolia API](https://www.algolia.com/doc/) (Geo search + Faceting + Filtering)
+- [Stripe API](https://stripe.com/docs) (Connect + Checkout)
+- [Firebase API](https://firebase.google.com/docs/guides) (Firestore + Storage + Auth)
+- [Mapbox Geocoding API](https://docs.mapbox.com/api/search/geocoding/)
+- [Vercel](https://vercel.com) (for the live demo)
+
+# Local setup
+
+If you intent to run the project locally, please create `.env.local` file and complete it:
+
+```bash
+# Next public variables
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="Stripe public key"
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN="Mapbox public key"
+NEXT_PUBLIC_INDEX_PRODUCTS="Algolia index name"
+NEXT_PUBLIC_ALGOLIA_SEARCH_KEY="Algolia search key"
+NEXT_PUBLIC_ALGOLIA_APP_ID="Algolia app ID"
+NEXT_PUBLIC_GOOGLE_API_KEY="Google maps API key"
+
+# Next private variables (for /api)
+STRIPE_SECRET_KEY="Stripe secret key"
+STRIPE_ENDPOINT_SECRET="Stripe webhook endpoint secret"
+STRIPE_ENDPOINT_CONNECT_SECRET="Stripe webhook endpoint secret for connected accounts"
+
+ALGOLIA_SECRET_KEY="Algolia secret key"
+ALGOLIA_APP_ID="Algolia app ID"
+INDEX_PRODUCTS="Algolia index name"
+
+FIREBASE_TOKEN="Firebase CI token"
+FIREBASE_PROJECT_ID="Firebase project ID"
+FIREBASE_CLIENT_EMAIL="Firebase service account client email"
+FIREBASE_PRIVATE_KEY="Firebase service account private key"
+```
+
+Don't forget to apply security rules and indexes to your Firebase project:
+
+```bash
+firebase deploy --only firestore,storage
+```
+
+Then run:
 
 ```bash
 npm run dev
-# or
-yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Thanks !!🎉😁
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+# Author
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Clément THIRIET (cthiriet.developer@gmail.com)

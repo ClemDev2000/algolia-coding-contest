@@ -80,7 +80,11 @@ export default function Navbar() {
               <div className="flex items-center justify-between h-20">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <Logo className="h-8 w-8" />
+                    <Link href="/">
+                      <a>
+                        <Logo className="h-8 w-8" />
+                      </a>
+                    </Link>
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">

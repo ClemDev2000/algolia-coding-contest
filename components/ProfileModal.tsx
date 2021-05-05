@@ -263,7 +263,7 @@ export default function ProductModal({
                   </button>
                   <button
                     type="button"
-                    className="inline-flex ml-auto justify-center px-4 py-2 text-sm font-medium text-red-500 bg-white border border-transparent rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
+                    className="inline-flex ml-auto justify-center pl-4 py-2 text-sm font-medium text-red-500 bg-white border border-transparent rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-red-500"
                     onClick={handleDeleteProfile}
                   >
                     Close my account

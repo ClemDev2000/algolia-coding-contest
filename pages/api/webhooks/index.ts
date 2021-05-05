@@ -62,25 +62,22 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       // Handle the event
       switch (event.type) {
         case 'checkout.session.completed': {
-          const session = event.data.object as Stripe.Checkout.Session;
+          let session = event.data.object as Stripe.Checkout.Session;
+
+          session = await stripe.checkout.sessions.retrieve(session.id, {
+            expand: [
+              'line_items',
+              'line_items.data.price.product',
+              'payment_intent',
+            ],
+          });
           const seller = session.metadata.seller;
           const buyer = session.metadata.buyer;
           const amount = session.amount_total;
           const currency = session.currency;
-
           const price = session.line_items.data[0].price;
-          const productPromise = stripe.products.retrieve(
-            price.product as string
-          );
-          const paymentIntentPromise = stripe.paymentIntents.retrieve(
-            session.payment_intent as string
-          );
-
-          const [product, paymentIntent] = await Promise.all([
-            productPromise,
-            paymentIntentPromise,
-          ]);
-
+          const product = price.product as Stripe.Product;
+          const paymentIntent = session.payment_intent as Stripe.PaymentIntent;
           const shipping = session.shipping;
 
           const order: IOrder = {

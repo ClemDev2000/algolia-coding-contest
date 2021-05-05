@@ -1,4 +1,4 @@
-WEBHOOKS=('', '')
+WEBHOOKS=('we_1InflMDohvA5sWNQcIAeajnA' 'we_1InfkTDohvA5sWNQe5WL9Er4')
 
 for webhook in "${WEBHOOKS[@]}"; do
   stripe webhook_endpoints update $webhook \

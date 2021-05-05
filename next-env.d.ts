@@ -55,5 +55,5 @@ interface IOrder {
   currency: string;
   seller: string;
   buyer: string;
-  shipping: Stripe.Checkout.Session.Shipping;
+  shipping: any;
 }

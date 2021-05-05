@@ -27,6 +27,11 @@ function MyApp({ Component, pageProps }) {
             integrity="sha256-t2ATOGCtAIZNnzER679jwcFcKYfLlw01gli6F6oszk8="
             crossOrigin="anonymous"
           />
+          <title>Localz - Sell Your Products</title>
+          <meta
+            name="description"
+            content="Localz is a P2P marketplace where everyone can sell and buy products posted by others"
+          />
         </Head>
         <div className="h-full">
           <Navbar />
