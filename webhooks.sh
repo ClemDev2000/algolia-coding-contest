@@ -11,7 +11,7 @@ stripe listen \
   --forward-to=localhost:3000/api/webhooks \
   --forward-connect-to=localhost:3000/api/webhooks/connect \
   --events=checkout.session.completed,account.updated \
-  --print-json
+  --format JSON
 
 function finish {
   for webhook in "${WEBHOOKS[@]}"; do

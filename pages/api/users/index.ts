@@ -40,8 +40,20 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const { email, password, name, address, geoloc, city } = req.body;
+      const {
+        email,
+        password,
+        firstName,
+        lastName,
+        address,
+        geoloc,
+        city,
+        postcode,
+        line1,
+        region,
+      } = req.body;
       const uid = `u_${randomId(20)}`;
+      const name = `${firstName} ${lastName}`;
       await auth.createUser({
         uid,
         email,
@@ -65,10 +77,22 @@ export default async function handler(
         business_type: 'individual',
         individual: {
           email,
+          first_name: firstName,
+          last_name: lastName,
+          address: {
+            city,
+            line1,
+            country: 'FR',
+            postal_code: postcode,
+            state: region,
+          },
         },
         capabilities: {
           card_payments: { requested: true },
           transfers: { requested: true },
+        },
+        business_profile: {
+          mcc: '5399',
         },
         metadata: {
           uid,

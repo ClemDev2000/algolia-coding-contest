@@ -5,7 +5,7 @@ export function Categories({ category, setCategory }) {
         htmlFor="category"
         className="block text-sm font-medium text-gray-700"
       >
-        Category 1
+        Category
       </label>
       <select
         id="category"

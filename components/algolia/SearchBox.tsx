@@ -32,7 +32,7 @@ const SearchBox: React.FC<any> = ({
           value={currentRefinement}
           onChange={(event) => refine(event.currentTarget.value)}
           className="block w-full text-base md:text-lg bg-white border-0 focus:ring-0 p-1 font-normal text-gray-500 placeholder-gray-400"
-          placeholder="Search by name, description"
+          placeholder="Search products by name, description"
         />
         <div className="bg-red-500 rounded-full p-2 cursor-pointer">
           <SearchIcon className="h-5 w-5 text-white" />

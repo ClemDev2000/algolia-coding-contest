@@ -7,7 +7,7 @@ import { formatAmountForDisplay } from '../utils/stripe-helpers';
 import aa from 'search-insights';
 import { PencilIcon, ShoppingBagIcon } from '@heroicons/react/outline';
 import Product from './ProductModal';
-import Highlight from '../components/Highlight';
+import Highlight from './algolia/Highlight';
 
 const indexProducts = process.env.NEXT_PUBLIC_INDEX_PRODUCTS;
 

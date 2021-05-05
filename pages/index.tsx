@@ -1,16 +1,15 @@
-import Head from 'next/head';
 import { useContext, useState } from 'react';
-import CustomResults from '../components/Results';
+import CustomResults from '../components/algolia/Results';
 import CustomHitsProducts from '../components/ProductsHits';
-import { ConfigureIndexProducts } from '../components/ConfigureAlgolia';
+import { ConfigureIndexProducts } from '../components/algolia/ConfigureAlgolia';
 import { InstantSearch, Configure } from 'react-instantsearch-dom';
 import algoliasearch from 'algoliasearch/lite';
 import { RefreshContext, UserContext } from '../lib/context';
-import CustomSearchBox from '../components/SearchBox';
-import CustomNumericMenu from '../components/NumericMenu';
-import CustomRefinementList from '../components/RefinementList';
-import CustomClearRefinements from '../components/ClearRefinements';
-import CustomHierarchicalMenu from '../components/HierarchicalMenu';
+import CustomSearchBox from '../components/algolia/SearchBox';
+import CustomNumericMenu from '../components/algolia/NumericMenu';
+import CustomRefinementList from '../components/algolia/RefinementList';
+import CustomClearRefinements from '../components/algolia/ClearRefinements';
+import CustomHierarchicalMenu from '../components/algolia/HierarchicalMenu';
 import Map from '../components/Map';
 import { ChevronDownIcon } from '@heroicons/react/solid';
 
@@ -87,19 +86,35 @@ function FilterSelector({ text, type, setType }) {
   );
 }
 
+function MyProductsSelector({ myProducts, setMyProducts }) {
+  return (
+    <button
+      className="relative inline-block text-left focus:outline-none"
+      onClick={() => setMyProducts(!myProducts)}
+    >
+      <div
+        className={`inline-flex justify-center w-full px-3 py-1 text-sm border text-gray-500 hover:border-red-500 font-medium hover:text-red-500 bg-white rounded-full hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${
+          myProducts ? 'text-red-500 border-red-500' : ''
+        }`}
+      >
+        My products
+      </div>
+    </button>
+  );
+}
+
 function Products() {
   const { user } = useContext(UserContext);
   const [resetSearch, setResetSearch] = useState(false);
   const [type, setType] = useState('');
+  const [myProducts, setMyProducts] = useState(false);
   return (
     <>
       <Configure
-        /*aroundLatLngViaIP={true}
-        aroundPrecision={200}
-        aroundRadius={20000}*/
         userToken={user?.uid}
         clickAnalytics
         page={0}
+        filters={myProducts && user ? `user.id:${user.uid}` : undefined}
       />
       <div className="w-full h-full col-span-5 md:col-span-3 px-5 overflow-y-scroll">
         <CustomSearchBox
@@ -112,6 +127,12 @@ function Products() {
           <FilterSelector text="city" type={type} setType={setType} />
           <FilterSelector text="categories" type={type} setType={setType} />
           <CustomClearRefinements setType={setType} />
+          {user && (
+            <MyProductsSelector
+              myProducts={myProducts}
+              setMyProducts={setMyProducts}
+            />
+          )}
         </div>
         <NumericMenuFilter type={type} />
         <RefinementList text="seller" attribute="user.name" type={type} />

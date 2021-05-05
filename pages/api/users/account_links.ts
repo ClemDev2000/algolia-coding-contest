@@ -44,7 +44,7 @@ export default async function handler(
           return_url: `${req.headers.origin}/`,
           type: 'account_onboarding',
         });
-        res.status(200).json(accountLink);
+        return res.status(200).json(accountLink);
       }
 
       const loginLink = await stripe.accounts.createLoginLink(
@@ -54,7 +54,7 @@ export default async function handler(
         }
       );
 
-      res.status(200).json(loginLink);
+      return res.status(200).json(loginLink);
     } catch (err) {
       res.status(500).json({ statusCode: 500, message: err.message });
     }
