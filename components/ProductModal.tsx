@@ -127,7 +127,7 @@ export default function ProductModal({
       );
       setTimeout(() => {
         setRefresh(true);
-      }, 2000);
+      }, 3000);
       setOpen(false);
       reset();
     } catch (err) {
@@ -166,7 +166,7 @@ export default function ProductModal({
       );
       setTimeout(() => {
         setRefresh(true);
-      }, 2000);
+      }, 3000);
       reset();
       setOpen(false);
     } catch (err) {
@@ -187,7 +187,7 @@ export default function ProductModal({
       });
       setTimeout(() => {
         setRefresh(true);
-      }, 2000);
+      }, 3000);
       reset();
       setOpen(false);
     } catch (err) {

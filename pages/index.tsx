@@ -108,7 +108,7 @@ function Products() {
   const { user } = useContext(UserContext);
   const [resetSearch, setResetSearch] = useState(false);
   const [type, setType] = useState('');
-  const [myProducts, setMyProducts] = useState(true);
+  const [myProducts, setMyProducts] = useState(false);
   return (
     <>
       {/* Algolia configurations */}

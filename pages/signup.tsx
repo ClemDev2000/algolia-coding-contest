@@ -38,7 +38,6 @@ export default function Signup() {
     geoloc &&
     city &&
     line1 &&
-    region &&
     postcode &&
     firstName &&
     lastName &&

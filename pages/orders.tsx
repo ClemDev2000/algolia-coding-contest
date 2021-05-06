@@ -76,7 +76,7 @@ function Column({
     }
   };
   return (
-    <div className="col-span-1 flex flex-col items-center">
+    <div className="md:col-span-1 flex flex-col items-center">
       <h1 className="font-semibold text-gray-800 text-xl mb-10">{title}</h1>
       {!objects.length && (
         <div className="flex justify-center text-lg font-semibold text-gray-500">
@@ -144,7 +144,7 @@ export default function Orders() {
 
   return (
     <AuthCheck>
-      <div className="max-w-4xl mx-auto mt-16 pb-16 grid grid-cols-2">
+      <div className="max-w-4xl mx-auto mt-16 pb-16 md:grid md:grid-cols-2 space-y-14 md:space-y-0">
         <Column
           title="My purchases (bought)"
           emptyMessage="No purchase to show"
