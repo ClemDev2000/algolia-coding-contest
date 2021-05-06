@@ -1,6 +1,6 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Algolia Coding Contest 2021 (Second category)
+# Algolia Coding Contest 2021 (Second category)
 
 This project was entirely created for Algolia Coding Contest 2021.
 
@@ -22,7 +22,7 @@ This project was made with:
 - [Mapbox Geocoding API](https://docs.mapbox.com/api/search/geocoding/)
 - [Vercel](https://vercel.com) (for the live demo)
 
-# Fake account
+## Fake account
 
 | Email       | Password  |
 | ----------- | --------- |
@@ -31,7 +31,7 @@ This project was made with:
 | u3@slafe.fr | azerty123 |
 | u4@slafe.fr | azerty123 |
 
-# Local setup
+## Local setup
 
 If you intent to run the project locally, please create `.env.local` file and complete it:
 
@@ -73,6 +73,6 @@ npm run dev
 
 Thanks !!🎉😁
 
-# Author
+## Author
 
 Clément THIRIET (cthiriet.developer@gmail.com)
