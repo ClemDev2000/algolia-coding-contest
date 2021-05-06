@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { authentication, now } from '../../../utils/api-helpers';
+import { authentication, now, randomId } from '../../../utils/api-helpers';
 
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -8,10 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2020-08-27',
 });
 import * as admin from 'firebase-admin';
-import * as firebaseTools from 'firebase-tools';
 
-const FIREBASE_PROJECT_ID: string = process.env.FIREBASE_PROJECT_ID!;
-const FIREBASE_TOKEN: string = process.env.FIREBASE_TOKEN!;
 const bucketName: string = process.env.FIREBASE_BUCKET_NAME!;
 
 import algoliasearch from 'algoliasearch';
@@ -53,14 +50,15 @@ export default async function handler(
         line1,
         region,
       } = req.body;
+      const uid = `u_${randomId(20)}`;
       const name = `${firstName} ${lastName}`;
-      const userObject = await auth.createUser({
+      await auth.createUser({
+        uid,
         email,
         emailVerified: false,
         password,
         displayName: name,
       });
-      const uid = userObject.uid;
 
       const customerPromise = stripe.customers.create({
         email,
@@ -133,6 +131,7 @@ export default async function handler(
 
       const promises = [];
 
+      const userRef = firestore.doc(`users/${user.id}`);
       const productsRef = firestore.collection(`users/${user.id}/products`);
       const snapshot = await productsRef.get();
       snapshot.forEach((doc) => {
@@ -143,8 +142,10 @@ export default async function handler(
         promises.push(
           stripe.prices.update(product.stripe.priceId, { active: false })
         );
+        promises.push(doc.ref.delete());
       });
 
+      promises.push(userRef.delete());
       promises.push(stripe.customers.del(user.stripe.customerId));
       promises.push(
         indexProducts.deleteBy({
@@ -155,14 +156,6 @@ export default async function handler(
       promises.push(
         storage.bucket(bucketName).deleteFiles({
           prefix: `users/${user.id}`,
-        })
-      );
-      promises.push(
-        firebaseTools.firestore.delete(`users/${user.id}`, {
-          project: FIREBASE_PROJECT_ID,
-          recursive: true,
-          yes: true,
-          token: FIREBASE_TOKEN,
         })
       );
 

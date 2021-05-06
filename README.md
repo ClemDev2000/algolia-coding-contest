@@ -16,11 +16,20 @@ This project was made with:
 
 - [Next.js](https://nextjs.org/) and [React](https://reactjs.org/docs/getting-started.html)
 - [Tailwind CSS](https://tailwindcss.com/)
-- [Algolia API](https://www.algolia.com/doc/) (Geo search + Faceting + Filtering)
+- [Algolia API](https://www.algolia.com/doc/) (Geo search + Faceting + Filtering + Personalization + Analytics)
 - [Stripe API](https://stripe.com/docs) (Connect + Checkout)
 - [Firebase API](https://firebase.google.com/docs/guides) (Firestore + Storage + Auth)
 - [Mapbox Geocoding API](https://docs.mapbox.com/api/search/geocoding/)
 - [Vercel](https://vercel.com) (for the live demo)
+
+# Fake account
+
+| Email       | Password  |
+| ----------- | --------- |
+| u1@slafe.fr | azerty123 |
+| u2@slafe.fr | azerty123 |
+| u3@slafe.fr | azerty123 |
+| u4@slafe.fr | azerty123 |
 
 # Local setup
 
@@ -45,7 +54,6 @@ ALGOLIA_APP_ID="Algolia app ID"
 INDEX_PRODUCTS="Algolia index name"
 
 FIREBASE_BUCKET_NAME="Firebase bucket name"
-FIREBASE_TOKEN="Firebase CI token"
 FIREBASE_PROJECT_ID="Firebase project ID"
 FIREBASE_CLIENT_EMAIL="Firebase service account client email"
 FIREBASE_PRIVATE_KEY="Firebase service account private key"
