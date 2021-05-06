@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { authentication, now, randomId } from '../../../utils/api-helpers';
+import { authentication, now } from '../../../utils/api-helpers';
 
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -53,15 +53,14 @@ export default async function handler(
         line1,
         region,
       } = req.body;
-      const uid = `u_${randomId(20)}`;
       const name = `${firstName} ${lastName}`;
-      await auth.createUser({
-        uid,
+      const userObject = await auth.createUser({
         email,
         emailVerified: false,
         password,
         displayName: name,
       });
+      const uid = userObject.uid;
 
       const customerPromise = stripe.customers.create({
         email,

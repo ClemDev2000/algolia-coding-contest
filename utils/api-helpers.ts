@@ -1,5 +1,4 @@
-import { randomBytes } from 'crypto';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest } from 'next';
 
 export async function fetchGetJSON(url: string) {
   try {
@@ -44,21 +43,6 @@ export async function fetchPostJSON(url: string, data?: {}, headers?: {}) {
     throw new Error(err.message);
   }
 }
-
-export const randomId = (idLength: number, chars?: string) => {
-  chars =
-    chars || 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let rnd = randomBytes(idLength);
-  let value = new Array(idLength);
-  let len = Math.min(256, chars.length);
-  let d = 256 / len;
-
-  for (var i = 0; i < idLength; i++) {
-    value[i] = chars[Math.floor(rnd[i] / d)];
-  }
-
-  return value.join('');
-};
 
 export const now = () => {
   return Math.floor(Date.now() / 1000);
