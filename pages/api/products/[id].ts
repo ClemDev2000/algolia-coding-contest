@@ -78,7 +78,13 @@ export default async function handler(
   } else if (req.method === 'POST') {
     try {
       const { id } = req.query;
-      const { name, description, photoUrl, categorylvl0 } = req.body;
+      const {
+        name,
+        description,
+        photoUrl,
+        categorylvl0,
+        categorylvl1,
+      } = req.body;
 
       const { user, error } = await authentication(req, auth, firestore);
       if (error) return res.status(401).json({ error });
@@ -90,7 +96,6 @@ export default async function handler(
 
       promises.push(
         stripe.products.update(product.objectID, {
-          ...(description && { description }),
           ...(name && { name }),
           ...(photoUrl && { images: [photoUrl] }),
         })
@@ -102,11 +107,13 @@ export default async function handler(
           ...(description && { description }),
           ...(name && { name }),
           ...(photoUrl && { photoUrl }),
-          ...(categorylvl0 && {
-            categories: {
-              lvl0: categorylvl0,
-            },
-          }),
+          ...(categorylvl0 &&
+            categorylvl1 && {
+              categories: {
+                lvl0: categorylvl0,
+                lvl1: `${categorylvl0} > ${categorylvl1}`,
+              },
+            }),
         })
       );
 
@@ -117,11 +124,13 @@ export default async function handler(
             ...(description && { description }),
             ...(name && { name }),
             ...(photoUrl && { photoUrl }),
-            ...(categorylvl0 && {
-              categories: {
-                lvl0: categorylvl0,
-              },
-            }),
+            ...(categorylvl0 &&
+              categorylvl1 && {
+                categories: {
+                  lvl0: categorylvl0,
+                  lvl1: `${categorylvl0} > ${categorylvl1}`,
+                },
+              }),
           })
       );
 

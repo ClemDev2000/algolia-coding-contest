@@ -10,7 +10,7 @@ const RefinementList = ({
 }) => (
   <ul
     className={
-      show ? 'mt-4 space-y-3 mb-1 p-2 border-b-2 border-gray-100' : 'hidden'
+      show ? 'mt-2 space-y-3 mb-1 p-2 border-b-2 border-gray-100' : 'hidden'
     }
   >
     <li>

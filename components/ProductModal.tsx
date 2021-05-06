@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from 'react';
 import { RefreshContext, UserContext } from '../lib/context';
 import { fetchDeleteJSON, fetchPostJSON } from '../utils/api-helpers';
 import { handleUploadPhotos } from '../utils/storage';
-import { Categories } from './Categories';
+import { Categories, SubCategories } from './Categories';
 import ErrorMessage from './ErrorMessage';
 import { Modal, ModalField, ModalFooter } from './Modals';
 
@@ -67,9 +67,15 @@ export default function ProductModal({
   const [description, setDescription] = useState(product?.description ?? '');
   const [name, setName] = useState(product?.name ?? '');
   const [amount, setAmount] = useState(product?.amount ?? '');
-  const [category, setCategory] = useState(
-    product?.categories.lvl0 ?? 'Electronics'
+  const [category, setCategory] = useState(product?.categories.lvl0 ?? '');
+  const [subcategory, setSubcategory] = useState(
+    product?.categories.lvl1.split('> ')[1] ?? ''
   );
+
+  useEffect(() => {
+    if (category !== product?.categories.lvl0) setSubcategory('');
+    else setSubcategory(product?.categories.lvl1.split('> ')[1]);
+  }, [category]);
 
   useEffect(() => {
     if (product && open === true) {
@@ -78,6 +84,7 @@ export default function ProductModal({
       setDescription(product.description);
       setCurrentPhoto(product.photoUrl);
       setCategory(product.categories.lvl0);
+      setSubcategory(product?.categories.lvl1.split('> ')[1]);
       setPhoto(null);
     }
   }, [open]);
@@ -94,7 +101,8 @@ export default function ProductModal({
     setPhotoUrl('');
     setPhoto(null);
     setCurrentPhoto('');
-    setCategory('Electronics');
+    setCategory('');
+    setSubcategory('');
   }
 
   const handleCreateProduct: React.FormEventHandler<HTMLFormElement> = async (
@@ -110,6 +118,7 @@ export default function ProductModal({
           description,
           amount,
           categorylvl0: category,
+          categorylvl1: subcategory,
           photoUrl: await handleUploadPhotos(photo, user?.uid),
         },
         {
@@ -144,7 +153,12 @@ export default function ProductModal({
             photoUrl: await handleUploadPhotos(photo, user?.uid),
           }),
           ...(category &&
-            category !== product.categories.lvl0 && { categorylvl0: category }),
+            subcategory &&
+            (category !== product.categories.lvl0 ||
+              subcategory !== product.categories.lvl1.split('> ')[1]) && {
+              categorylvl0: category,
+              categorylvl1: subcategory,
+            }),
         },
         {
           token: await user.getIdToken(),
@@ -259,6 +273,13 @@ export default function ProductModal({
         </div>
       </div>
       <Categories category={category} setCategory={setCategory} />
+      {category && (
+        <SubCategories
+          subcategory={subcategory}
+          setSubcategory={setSubcategory}
+          type={category}
+        />
+      )}
       <ErrorMessage message={error} />
       <ModalFooter
         loading={loading}

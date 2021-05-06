@@ -37,14 +37,20 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     try {
-      const { name, description, amount, photoUrl, categorylvl0 } = req.body;
+      const {
+        name,
+        description,
+        amount,
+        photoUrl,
+        categorylvl0,
+        categorylvl1,
+      } = req.body;
 
       const { user, error } = await authentication(req, auth, firestore);
       if (error) return res.status(401).json({ error });
 
       const product = await stripe.products.create({
         name,
-        description,
         images: [photoUrl],
         metadata: {
           uid: user.id,
@@ -80,6 +86,7 @@ export default async function handler(
         },
         categories: {
           lvl0: categorylvl0,
+          lvl1: `${categorylvl0} > ${categorylvl1}`,
         },
         _geoloc: user.geoloc,
       };

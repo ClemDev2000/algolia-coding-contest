@@ -8,6 +8,7 @@ import aa from 'search-insights';
 import { PencilIcon, ShoppingBagIcon } from '@heroicons/react/outline';
 import Product from './ProductModal';
 import Highlight from './algolia/Highlight';
+import DescriptionModal from './DescriptionModal';
 
 const indexProducts = process.env.NEXT_PUBLIC_INDEX_PRODUCTS;
 
@@ -39,7 +40,21 @@ function Spinner() {
 function HitProducts({ hit }: { hit: IProduct }) {
   const { user } = useContext(UserContext);
   const [open, setOpen] = useState(false);
+  const [openDescription, setOpenDescription] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const click = () => {
+    // @ts-ignore
+    aa('clickedObjectIDsAfterSearch', {
+      ...(user && { userToken: user.uid }),
+      index: indexProducts,
+      eventName: 'Click',
+      queryID: hit.__queryID,
+      objectIDs: [hit.objectID],
+      positions: [hit.__position],
+    });
+    setOpenDescription(true);
+  };
 
   const buy = async () => {
     setLoading(true);
@@ -85,7 +100,10 @@ function HitProducts({ hit }: { hit: IProduct }) {
 
       {/* Infos */}
       <div className="flex flex-col h-full w-full px-3 py-3 overflow-x-scroll">
-        <h1 className="text-base md:text-lg font-semibold truncate">
+        <h1
+          className="text-base md:text-lg font-semibold truncate cursor-pointer"
+          onClick={click}
+        >
           <Highlight attribute="name" hit={hit} />
         </h1>
         <h2 className="text-xs sm:text-sm font-medium truncate text-gray-500">
@@ -94,7 +112,10 @@ function HitProducts({ hit }: { hit: IProduct }) {
           </span>
         </h2>
         <div className="border rounded-full w-1/5 my-2 bg-gray-300" />
-        <h3 className="text-sm md:text-base font-normal truncate text-gray-500">
+        <h3
+          className="text-sm md:text-base font-normal truncate text-gray-500 cursor-pointer"
+          onClick={click}
+        >
           <Highlight attribute="description" hit={hit} />
         </h3>
         <div className="flex flex-wrap items-center justify-between mt-auto">
@@ -108,15 +129,15 @@ function HitProducts({ hit }: { hit: IProduct }) {
               onClick={() => setOpen(true)}
               className="inline-flex bg-red-500 rounded-full p-2 cursor-pointer justify-center border border-transparent text-sm font-medium focus:outline-none"
             >
-              <PencilIcon className="h-4 w-4 md:h-5 md:w-5 text-white" />
+              <PencilIcon className="h-4 w-4 text-white" />
             </button>
           ) : (
             <button
               onClick={buy}
-              className="inline-flex text-white px-3 items-center font-semibold bg-red-500 rounded-full p-2 cursor-pointer justify-center border border-transparent text-sm focus:outline-none"
+              className="inline-flex text-white px-3 items-center font-semibold bg-red-500 rounded-full p-1 cursor-pointer justify-center border border-transparent text-sm focus:outline-none"
             >
               {!loading ? (
-                <ShoppingBagIcon className="h-5 w-5 text-white mr-1" />
+                <ShoppingBagIcon className="h-4 w-4 text-white mr-1" />
               ) : (
                 <Spinner />
               )}
@@ -126,6 +147,12 @@ function HitProducts({ hit }: { hit: IProduct }) {
         </div>
       </div>
       <Product open={open} setOpen={setOpen} product={hit} />
+      <DescriptionModal
+        open={openDescription}
+        setOpen={setOpenDescription}
+        title={hit.name}
+        description={hit.description}
+      />
     </li>
   );
 }

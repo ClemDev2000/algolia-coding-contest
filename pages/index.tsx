@@ -64,7 +64,7 @@ function HierarchicalMenu({ type, text }) {
   return (
     <CustomHierarchicalMenu
       show={type === text}
-      attributes={['categories.lvl0']}
+      attributes={['categories.lvl0', 'categories.lvl1']}
     />
   );
 }
@@ -108,7 +108,7 @@ function Products() {
   const { user } = useContext(UserContext);
   const [resetSearch, setResetSearch] = useState(false);
   const [type, setType] = useState('');
-  const [myProducts, setMyProducts] = useState(false);
+  const [myProducts, setMyProducts] = useState(true);
   return (
     <>
       {/* Algolia configurations */}

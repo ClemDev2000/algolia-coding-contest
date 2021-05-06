@@ -3,7 +3,7 @@ import { connectNumericMenu } from 'react-instantsearch-core';
 const NumericMenu = ({ items, refine, createURL, show }) => (
   <ul
     className={
-      show ? 'mt-4 mb-1 space-y-1 p-2 border-b-2 border-gray-100' : 'hidden'
+      show ? 'mt-2 mb-1 space-y-1 p-2 border-b-2 border-gray-100' : 'hidden'
     }
   >
     {items.map((item) => (

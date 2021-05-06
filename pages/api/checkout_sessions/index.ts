@@ -29,8 +29,18 @@ export default async function handler(
     try {
       const { priceId } = req.body;
 
-      const { user, error } = await authentication(req, auth, firestore);
-      if (error) return res.status(401).json({ error });
+      let user: IUser | undefined;
+      if (req.headers.token) {
+        try {
+          const { uid } = await auth.verifyIdToken(
+            req.headers.token as string,
+            true
+          );
+          user = (await firestore.doc(`users/${uid}`).get()).data() as IUser;
+        } catch (error) {
+          return res.status(401).json({ error: error.message });
+        }
+      }
 
       const price = await stripe.prices.retrieve(priceId);
 
