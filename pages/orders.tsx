@@ -76,7 +76,7 @@ function Column({
     }
   };
   return (
-    <div className="md:col-span-1 flex flex-col items-center">
+    <div className="md:col-span-1 flex flex-col items-center mb-16">
       <h1 className="font-semibold text-gray-800 text-xl mb-10">{title}</h1>
       {!objects.length && (
         <div className="flex justify-center text-lg font-semibold text-gray-500">
