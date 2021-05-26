@@ -59,7 +59,9 @@ export default async function handler(
           seller: price.metadata.uid,
         },
         payment_intent_data: {
-          application_fee_amount: Math.ceil(price.unit_amount * 0.05 + 50), // Fees: 5% + 0.5€
+          application_fee_amount: price.metadata?.promote
+            ? Math.ceil(price.unit_amount * 0.07 + 200)
+            : Math.ceil(price.unit_amount * 0.05 + 50), // Fees: 5% + 0.5€ (7% + 2€ if promoted)
           transfer_data: {
             destination: price.metadata.destination,
           },
