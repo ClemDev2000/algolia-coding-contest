@@ -1,4 +1,4 @@
-import { PhotographIcon } from '@heroicons/react/outline';
+import { PhotographIcon, SpeakerphoneIcon } from '@heroicons/react/outline';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { RefreshContext, UserContext } from '../lib/context';
 import { fetchDeleteJSON, fetchPostJSON } from '../utils/api-helpers';
@@ -72,6 +72,8 @@ export default function ProductModal({
     product?.categories.lvl1.split('> ')[1] ?? ''
   );
 
+  const [promote, setPromote] = useState(product?.promote ?? '');
+
   useEffect(() => {
     if (category !== product?.categories.lvl0) setSubcategory('');
     else setSubcategory(product?.categories.lvl1.split('> ')[1]);
@@ -86,6 +88,7 @@ export default function ProductModal({
       setCategory(product.categories.lvl0);
       setSubcategory(product?.categories.lvl1.split('> ')[1]);
       setPhoto(null);
+      setPromote(product.promote ?? '');
     }
   }, [open]);
 
@@ -103,6 +106,7 @@ export default function ProductModal({
     setCurrentPhoto('');
     setCategory('');
     setSubcategory('');
+    setPromote('');
   }
 
   const handleCreateProduct: React.FormEventHandler<HTMLFormElement> = async (
@@ -117,6 +121,7 @@ export default function ProductModal({
           name,
           description,
           amount,
+          promote,
           categorylvl0: category,
           categorylvl1: subcategory,
           photoUrl: await handleUploadPhotos(photo, user?.uid),
@@ -149,6 +154,7 @@ export default function ProductModal({
           ...(name && name !== product.name && { name }),
           ...(description &&
             description !== product.description && { description }),
+          ...(promote && promote !== product.promote && { promote }),
           ...(photo && {
             photoUrl: await handleUploadPhotos(photo, user?.uid),
           }),
@@ -176,26 +182,25 @@ export default function ProductModal({
     setLoading(false);
   };
 
-  const handleDeleteProduct: React.MouseEventHandler<HTMLButtonElement> = async (
-    e
-  ) => {
-    setLoading(true);
-    try {
-      e.preventDefault();
-      await fetchDeleteJSON(`/api/products/${product.objectID}`, {
-        token: await user.getIdToken(),
-      });
-      setTimeout(() => {
-        setRefresh(true);
-      }, 3000);
-      reset();
-      setOpen(false);
-    } catch (err) {
-      setError(err.message);
-      console.warn(err.message);
-    }
-    setLoading(false);
-  };
+  const handleDeleteProduct: React.MouseEventHandler<HTMLButtonElement> =
+    async (e) => {
+      setLoading(true);
+      try {
+        e.preventDefault();
+        await fetchDeleteJSON(`/api/products/${product.objectID}`, {
+          token: await user.getIdToken(),
+        });
+        setTimeout(() => {
+          setRefresh(true);
+        }, 3000);
+        reset();
+        setOpen(false);
+      } catch (err) {
+        setError(err.message);
+        console.warn(err.message);
+      }
+      setLoading(false);
+    };
 
   function closeModal() {
     setOpen(false);
@@ -280,6 +285,24 @@ export default function ProductModal({
           type={category}
         />
       )}
+      <div className="flex items-center pt-5">
+        <SpeakerphoneIcon className="h-4 w-4 text-red-500 mr-2" />
+        <h2 className="text-red-500">
+          Promote <span className="text-gray-400">(optional)*</span>
+        </h2>
+      </div>
+      <ModalField
+        label="Query words (use ; to separate)"
+        id="promote"
+        name="promote"
+        type="text"
+        required
+        value={promote}
+        setValue={setPromote}
+      />
+      <div>
+        <h2 className="text-gray-400 text-sm">*7% + 2€ instead of 5% + 0.5€</h2>
+      </div>
       <ErrorMessage message={error} />
       <ModalFooter
         loading={loading}

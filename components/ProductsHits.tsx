@@ -5,7 +5,11 @@ import { fetchPostJSON } from '../utils/api-helpers';
 import getStripe from '../utils/get-stripejs';
 import { formatAmountForDisplay } from '../utils/stripe-helpers';
 import aa from 'search-insights';
-import { PencilIcon, ShoppingBagIcon } from '@heroicons/react/outline';
+import {
+  PencilIcon,
+  ShoppingBagIcon,
+  SpeakerphoneIcon,
+} from '@heroicons/react/outline';
 import Product from './ProductModal';
 import Highlight from './algolia/Highlight';
 import DescriptionModal from './DescriptionModal';
@@ -113,15 +117,21 @@ function HitProducts({ hit }: { hit: IProduct }) {
         </h2>
         <div className="border rounded-full w-1/5 my-2 bg-gray-300" />
         <h3
-          className="text-sm md:text-base font-normal truncate text-gray-500 cursor-pointer"
+          className="text-sm md:text-base font-normal whitespace-nowrap overflow-x-auto text-gray-500 cursor-pointer"
           onClick={click}
         >
           <Highlight attribute="description" hit={hit} />
         </h3>
         <div className="flex flex-wrap items-center justify-between mt-auto">
-          <h1 className="sm:text-sm md:text-lg font-semibold text-gray-500">
-            {formatAmountForDisplay(hit.amount, hit.currency)}
-          </h1>
+          <div className="flex items-center">
+            <h1 className="sm:text-sm md:text-lg font-semibold text-gray-500 mr-2">
+              {formatAmountForDisplay(hit.amount, hit.currency)}
+            </h1>
+
+            {hit.promote && (
+              <SpeakerphoneIcon className="h-5 w-5 text-red-500" />
+            )}
+          </div>
 
           {/* Buttons */}
           {hit.user.id === user?.uid ? (

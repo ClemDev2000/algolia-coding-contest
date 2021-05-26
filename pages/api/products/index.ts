@@ -44,6 +44,7 @@ export default async function handler(
         photoUrl,
         categorylvl0,
         categorylvl1,
+        promote,
       } = req.body;
 
       const { user, error } = await authentication(req, auth, firestore);
@@ -64,6 +65,7 @@ export default async function handler(
         metadata: {
           uid: user.id,
           destination: user.stripe.accountId,
+          promote: promote || '',
         },
       });
 
@@ -84,6 +86,7 @@ export default async function handler(
           id: user.id,
           city: user.city,
         },
+        ...(promote && { promote }),
         categories: {
           lvl0: categorylvl0,
           lvl1: `${categorylvl0} > ${categorylvl1}`,
@@ -99,6 +102,28 @@ export default async function handler(
           .set(algoliaProduct)
       );
       await Promise.all(promises);
+
+      if (promote) {
+        const conditions = promote.split(';').map((word) => {
+          return {
+            pattern: word.replace(/\s+/g, ' ').trim(), // Remove extra spaces from a string
+            anchoring: 'contains',
+            alternatives: true,
+          };
+        });
+        await indexProducts.saveRule({
+          objectID: algoliaProduct.objectID,
+          conditions,
+          consequence: {
+            promote: [
+              {
+                objectID: algoliaProduct.objectID,
+                position: 0,
+              },
+            ],
+          },
+        });
+      }
 
       res.status(200).json(algoliaProduct);
     } catch (err) {

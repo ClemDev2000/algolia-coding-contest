@@ -37,6 +37,7 @@ interface IProduct {
     lvl0: string;
     lvl1?: string;
   };
+  promote?: string;
   _geoloc: [number, number];
   __queryID?: string;
   __position?: string;

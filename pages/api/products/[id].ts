@@ -84,6 +84,7 @@ export default async function handler(
         photoUrl,
         categorylvl0,
         categorylvl1,
+        promote,
       } = req.body;
 
       const { user, error } = await authentication(req, auth, firestore);
@@ -123,6 +124,7 @@ export default async function handler(
           .update({
             ...(description && { description }),
             ...(name && { name }),
+            ...(promote && { promote }),
             ...(photoUrl && { photoUrl }),
             ...(categorylvl0 &&
               categorylvl1 && {
@@ -133,6 +135,39 @@ export default async function handler(
               }),
           })
       );
+
+      if (promote) {
+        const conditions = promote.split(';').map((word) => {
+          return {
+            pattern: word.replace(/\s+/g, ' ').trim(), // Remove extra spaces from a string
+            anchoring: 'contains',
+            alternatives: true,
+          };
+        });
+        promises.push(
+          indexProducts.saveRule({
+            objectID: product.objectID,
+            conditions,
+            consequence: {
+              promote: [
+                {
+                  objectID: product.objectID,
+                  position: 0,
+                },
+              ],
+            },
+          })
+        );
+        promises.push(
+          stripe.prices.update(product.stripe.priceId, {
+            metadata: {
+              uid: user.id,
+              destination: user.stripe.accountId,
+              promote: promote || '',
+            },
+          })
+        );
+      }
 
       await Promise.all(promises);
 
