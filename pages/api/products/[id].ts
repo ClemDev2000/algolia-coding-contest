@@ -102,38 +102,31 @@ export default async function handler(
         })
       );
 
+      const updatedProduct = {
+        ...(description && { description }),
+        ...(name && { name }),
+        ...(photoUrl && { photoUrl }),
+        ...(promote && { promote }),
+        ...(categorylvl0 &&
+          categorylvl1 && {
+            categories: {
+              lvl0: categorylvl0,
+              lvl1: `${categorylvl0} > ${categorylvl1}`,
+            },
+          }),
+      };
+
       promises.push(
         indexProducts.partialUpdateObject({
           objectID: product.objectID,
-          ...(description && { description }),
-          ...(name && { name }),
-          ...(photoUrl && { photoUrl }),
-          ...(categorylvl0 &&
-            categorylvl1 && {
-              categories: {
-                lvl0: categorylvl0,
-                lvl1: `${categorylvl0} > ${categorylvl1}`,
-              },
-            }),
+          ...updatedProduct,
         })
       );
 
       promises.push(
         firestore
           .doc(`users/${product.user.id}/products/${product.objectID}`)
-          .update({
-            ...(description && { description }),
-            ...(name && { name }),
-            ...(promote && { promote }),
-            ...(photoUrl && { photoUrl }),
-            ...(categorylvl0 &&
-              categorylvl1 && {
-                categories: {
-                  lvl0: categorylvl0,
-                  lvl1: `${categorylvl0} > ${categorylvl1}`,
-                },
-              }),
-          })
+          .update(updatedProduct)
       );
 
       if (promote) {
