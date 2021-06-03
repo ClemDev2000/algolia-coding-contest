@@ -19,6 +19,7 @@ const bucketName: string = process.env.FIREBASE_BUCKET_NAME!;
 
 import * as admin from 'firebase-admin';
 import { getStoragePathFromUrl } from '../../../utils/api-helpers';
+import { deleteProduct } from '../../../utils/products';
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -45,31 +46,19 @@ export default async function handler(
       const { user, error } = await authentication(req, auth, firestore);
       if (error) return res.status(401).json({ error });
 
-      const doc = await firestore.doc(`users/${user.id}/products/${id}`).get();
-      const product = doc.data() as IProduct;
-
-      const storagePath = getStoragePathFromUrl(product.photoUrl);
-
-      const promises = [];
-
-      promises.push(
-        stripe.products.update(product.stripe.productId, {
-          active: false,
-        })
+      await deleteProduct(
+        firestore,
+        getStoragePathFromUrl,
+        indexProducts,
+        storage,
+        bucketName,
+        stripe,
+        user.id,
+        id
       );
-      promises.push(
-        stripe.prices.update(product.stripe.priceId, {
-          active: false,
-        })
-      );
-      promises.push(indexProducts.deleteObject(product.objectID));
-      promises.push(firestore.doc(`users/${user.id}/products/${id}`).delete());
-      promises.push(storage.bucket(bucketName).file(storagePath).delete());
-
-      await Promise.all(promises);
 
       res.status(200).json({
-        objectID: product.objectID,
+        objectID: id,
         deleted: true,
       });
     } catch (err) {
@@ -78,14 +67,10 @@ export default async function handler(
   } else if (req.method === 'POST') {
     try {
       const { id } = req.query;
-      const {
-        name,
-        description,
-        photoUrl,
-        categorylvl0,
-        categorylvl1,
-        promote,
-      } = req.body;
+      let { name, description, photoUrl, categorylvl0, categorylvl1, promote } =
+        req.body;
+
+      if (promote != null) promote = promote.replace(/\s+/g, ' ').trim();
 
       const { user, error } = await authentication(req, auth, firestore);
       if (error) return res.status(401).json({ error });
@@ -106,7 +91,7 @@ export default async function handler(
         ...(description && { description }),
         ...(name && { name }),
         ...(photoUrl && { photoUrl }),
-        ...(promote && { promote }),
+        ...(promote != null && { promote: promote || null }),
         ...(categorylvl0 &&
           categorylvl1 && {
             categories: {
@@ -157,6 +142,17 @@ export default async function handler(
               uid: user.id,
               destination: user.stripe.accountId,
               promote: promote || '',
+            },
+          })
+        );
+      } else if (promote != null) {
+        promises.push(indexProducts.deleteRule(product.objectID));
+        promises.push(
+          stripe.prices.update(product.stripe.priceId, {
+            metadata: {
+              uid: user.id,
+              destination: user.stripe.accountId,
+              promote: '',
             },
           })
         );

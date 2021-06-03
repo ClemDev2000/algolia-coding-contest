@@ -154,7 +154,7 @@ export default function ProductModal({
           ...(name && name !== product.name && { name }),
           ...(description &&
             description !== product.description && { description }),
-          ...(promote && promote !== product.promote && { promote }),
+          ...(promote !== product.promote && { promote }),
           ...(photo && {
             photoUrl: await handleUploadPhotos(photo, user?.uid),
           }),
@@ -296,7 +296,6 @@ export default function ProductModal({
         id="promote"
         name="promote"
         type="text"
-        required
         value={promote}
         setValue={setPromote}
       />

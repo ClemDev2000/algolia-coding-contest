@@ -79,4 +79,4 @@ Clément THIRIET (cthiriet.developer@gmail.com)
 
 ## Note
 
-This repo has been improved since the submission deadline of Algolia Coding Contest. To see the the version that was submitted for the contest, please refer to https://github.com/ClemDev2000/algolia-cc-priv/commit/de96bc7459a2cda3bf4b2db0f96f3c4a492a0f85.
+This repo has been improved since the submission deadline of Algolia Coding Contest. To see the version that was submitted for the contest, please refer to https://github.com/ClemDev2000/algolia-cc-priv/commit/de96bc7459a2cda3bf4b2db0f96f3c4a492a0f85.
