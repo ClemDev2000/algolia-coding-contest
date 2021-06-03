@@ -2,13 +2,21 @@ import { buffer } from 'micro';
 import Cors from 'micro-cors';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import algoliasearch from 'algoliasearch';
+const client = algoliasearch(
+  process.env.ALGOLIA_APP_ID!,
+  process.env.ALGOLIA_SECRET_KEY!
+);
+const indexProducts = client.initIndex(process.env.INDEX_PRODUCTS!);
+
 import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   // https://github.com/stripe/stripe-node#configuration
   apiVersion: '2020-08-27',
 });
 import * as admin from 'firebase-admin';
-import { now } from '../../../utils/api-helpers';
+import { getStoragePathFromUrl, now } from '../../../utils/api-helpers';
+import { deleteProduct } from '../../../utils/products';
 
 if (!admin.apps.length) {
   admin.initializeApp({
@@ -21,6 +29,9 @@ if (!admin.apps.length) {
 }
 
 const firestore = admin.firestore();
+const storage = admin.storage();
+
+const bucketName: string = process.env.FIREBASE_BUCKET_NAME!;
 
 const webhookSecret: string = process.env.STRIPE_ENDPOINT_SECRET!;
 
@@ -96,7 +107,24 @@ const webhookHandler = async (req: NextApiRequest, res: NextApiResponse) => {
             shipping,
           };
 
-          await firestore.doc(`orders/${order.id}`).set(order);
+          const promises = [];
+
+          promises.push(
+            deleteProduct(
+              firestore,
+              getStoragePathFromUrl,
+              indexProducts,
+              storage,
+              bucketName,
+              stripe,
+              seller,
+              product.id
+            )
+          );
+
+          promises.push(firestore.doc(`orders/${order.id}`).set(order));
+
+          await Promise.all(promises);
           break;
         }
 
