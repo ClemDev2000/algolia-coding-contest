@@ -5,7 +5,7 @@ export const handleUploadPhotos = (file: File, uid: string): Promise<string> =>
   new Promise((resolve, reject) => {
     if (!file) resolve('');
     const storageRef = storage.ref();
-    const path = `users/${uid}/${uuidv4()}`; // eslint-disable-line @typescript-eslint/no-non-null-assertion
+    const path = `users/${uid}/${uuidv4()}`;
     const uploadTask = storageRef.child(path).put(file);
     uploadTask
       .then(async () => {

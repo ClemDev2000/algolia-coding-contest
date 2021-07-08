@@ -3,6 +3,6 @@ module.exports = {
     domains: ['firebasestorage.googleapis.com'],
   },
   eslint: {
-    dirs: ['pages', 'utils', 'components', 'utils', 'lib'],
+    dirs: ['pages', 'components', 'utils', 'lib'],
   },
 };
