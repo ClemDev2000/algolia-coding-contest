@@ -159,7 +159,7 @@ function DesktopMenu({ sellProduct, profile, setOpenProfile }) {
           </div>
         )}
         {user && userdata?.stripe.transfers && (
-          <Link href="/reauth">
+          <Link href="/reauth" passHref>
             <div className="ml-6 relative">
               <div className="max-w-xs bg-red-500 flex items-center text-sm focus:outline-none">
                 <span className="sr-only">Open account</span>

@@ -6,7 +6,7 @@ const Results: React.FC<any> = ({ searchState, searchResults, children }) => {
   ) : searchState.query ? (
     <div className="flex flex-col items-center justify-center h-36">
       <h1 className="mt-4 font-medium text-base text-gray-600">
-        No result for "{searchState.query}".
+        No result for &quot;{searchState.query}&quot;.
       </h1>
     </div>
   ) : (

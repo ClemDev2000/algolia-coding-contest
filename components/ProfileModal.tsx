@@ -59,23 +59,22 @@ export default function ProductModal({
     setLoading(false);
   };
 
-  const handleDeleteProfile: React.MouseEventHandler<HTMLButtonElement> = async (
-    e
-  ) => {
-    setLoading(true);
-    try {
-      e.preventDefault();
-      await fetchDeleteJSON('/api/users', {
-        token: await user.getIdToken(),
-      });
-      closeModal();
-      await auth.signOut();
-      window.location.reload();
-    } catch (err) {
-      console.warn(err.message);
-    }
-    setLoading(false);
-  };
+  const handleDeleteProfile: React.MouseEventHandler<HTMLButtonElement> =
+    async (e) => {
+      setLoading(true);
+      try {
+        e.preventDefault();
+        await fetchDeleteJSON('/api/users', {
+          token: await user.getIdToken(),
+        });
+        closeModal();
+        await auth.signOut();
+        window.location.reload();
+      } catch (err) {
+        console.warn(err.message);
+      }
+      setLoading(false);
+    };
 
   useEffect(() => {
     if (userdata) {
