@@ -4,11 +4,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 This project was entirely created for Algolia Coding Contest 2021.
 
-The website is called [Localz](https://algolia-coding-contest.vercel.app/). It's a P2P marketplace where everyone can sell and buy products posted by others.
-
-A live demo is available [here](https://algolia-coding-contest.vercel.app/).
-
-Note that the [live demo](https://algolia-coding-contest.vercel.app/) uses **TEST API keys**, so feel free to experiment as you want.
+The website is called Localz. It's a P2P marketplace where everyone can sell and buy products posted by others.
 
 Note: _This project is configured to run **french businesses**. As a result, **Stripe connected accounts** will be created with `country: 'FR'` params and **Mapbox Geocoding API** will only show FR addresses. Moreover the main currency is **EUR**. For convenience and for the internationality of this competition, English is used as the main language._
 
