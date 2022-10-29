@@ -20,30 +20,10 @@ This project was made with:
 
 ## Local setup
 
-If you intent to run the project locally, please create `.env.local` file and complete it:
+If you intent to run the project locally, copy `.env.example` as `.env.local` and fill the variables with your own credentials:
 
-```bash
-# Next public variables
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="Stripe public key"
-NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN="Mapbox public key"
-NEXT_PUBLIC_INDEX_PRODUCTS="Algolia index name"
-NEXT_PUBLIC_ALGOLIA_SEARCH_KEY="Algolia search key"
-NEXT_PUBLIC_ALGOLIA_APP_ID="Algolia app ID"
-NEXT_PUBLIC_GOOGLE_API_KEY="Google maps API key"
-
-# Next private variables (for /api)
-STRIPE_SECRET_KEY="Stripe secret key"
-STRIPE_ENDPOINT_SECRET="Stripe webhook endpoint secret"
-STRIPE_ENDPOINT_CONNECT_SECRET="Stripe webhook endpoint secret for connected accounts"
-
-ALGOLIA_SECRET_KEY="Algolia secret key"
-ALGOLIA_APP_ID="Algolia app ID"
-INDEX_PRODUCTS="Algolia index name"
-
-FIREBASE_BUCKET_NAME="Firebase bucket name"
-FIREBASE_PROJECT_ID="Firebase project ID"
-FIREBASE_CLIENT_EMAIL="Firebase service account client email"
-FIREBASE_PRIVATE_KEY="Firebase service account private key"
+```sh
+cp .env.example .env.local
 ```
 
 Don't forget to apply security rules and indexes to your Firebase project:
@@ -52,9 +32,10 @@ Don't forget to apply security rules and indexes to your Firebase project:
 firebase deploy --only firestore,storage
 ```
 
-Then run:
+Install the dependencies and run the project:
 
 ```bash
+npm install
 npm run dev
 ```
 
