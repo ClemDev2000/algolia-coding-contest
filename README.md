@@ -18,15 +18,6 @@ This project was made with:
 - [Mapbox Geocoding API](https://docs.mapbox.com/api/search/geocoding/)
 - [Vercel](https://vercel.com) (for the live demo)
 
-## Fake accounts
-
-| Email       | Password  |
-| ----------- | --------- |
-| u1@slafe.fr | azerty123 |
-| u2@slafe.fr | azerty123 |
-| u3@slafe.fr | azerty123 |
-| u4@slafe.fr | azerty123 |
-
 ## Local setup
 
 If you intent to run the project locally, please create `.env.local` file and complete it:
@@ -67,12 +58,15 @@ Then run:
 npm run dev
 ```
 
-Thanks !!🎉😁
+## Test Stripe Webhooks locally
+
+```sh
+stripe listen \
+  --forward-to=http://localhost:3000/api/webhooks \
+  --forward-connect-to=http://localhost:3000/api/webhooks/connect \
+  --events=checkout.session.completed,account.updated
+```
 
 ## Author
 
-Clément THIRIET (cthiriet.developer@gmail.com)
-
-## Note
-
-This repo has been improved since the submission deadline of Algolia Coding Contest. To see the version that was submitted for the contest, please refer to https://github.com/ClemDev2000/algolia-cc-priv/commit/de96bc7459a2cda3bf4b2db0f96f3c4a492a0f85.
+Clément Thiriet (cthiriet.developer@gmail.com)
